@@ -1,0 +1,23 @@
+services:
+  - type: web
+    name: cookbuddy-api
+    runtime: python
+    rootDir: server
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn app:app
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: cookbuddy-db
+          property: connectionString
+
+  - type: web
+    name: cookbuddy-frontend
+    runtime: static
+    buildCommand: npm install && npm run build
+    staticPublishPath: ./build
+
+databases:
+  - name: cookbuddy-db
+    databaseName: cookbuddy
+    user: cookbuddy
